@@ -42,14 +42,22 @@ mkdir mysql_data/
  $ docker-compose up -d --force-recreate
 
  $ docker-compose build && docker-compose up -d
+ $ docker-compose build && docker-compose up -d --force-recreate
 
  $ docker-compose ps
 
- $ docker-compose exec phpapp ls -l
+ $ docker-compose exec phpapp ls -lah
 
- $ docker-compose exec phpapp composer install
+ $ docker-compose exec phpapp composer install --ignore-platform-reqs
+ $ docker-compose exec phpapp composer update --ignore-platform-reqs
 
+ $ docker-compose exec phpapp php artisan --version
  $ docker-compose exec phpapp php artisan key:generate
+
+ $ docker-compose exec phpapp php artisan cache:clear
+ $ docker-compose exec phpapp php artisan route:clear
+ $ docker-compose exec phpapp php artisan config:clear
+ $ docker-compose exec phpapp php artisan view:clear
 
  $ docker-compose logs <name-of-service>
  $ docker-compose logs nginx
@@ -77,12 +85,12 @@ mkdir mysql_data/
  
  $ docker-compose run --rm composer update --ignore-platform-reqs
  $ docker-compose run --rm composer require aschmelyun/larametrics
- $ docker-compose run --rm npm install
+ $ docker-compose run --rm npm install --no-bin-links
  $ docker-compose run --rm npm run dev
  $ docker-compose exec phpapp php -v
- $ docker-compose exec phpapp php /var/www/html/artisan migrate
+ $ docker-compose exec phpapp php /var/www/artisan migrate
  $ docker-compose run --rm artisan migrate
- $ docker-compose exec phpapp chmod 777 -R /var/www/html/storage/
+ $ docker-compose exec phpapp chmod 777 -R /var/www/storage/
 
 ```
 
@@ -97,3 +105,5 @@ DigitalOcean => [DigitalOcean](https://www.digitalocean.com/community/tutorials/
 
 ## Issues
 - MySQL always restart when using v5.7 or 5.7.35, change MySQL to v5.7.16 solve the problem
+- PHP Parse error:  syntax error, unexpected '|', expecting variable (T_VARIABLE) in /var/www/vendor/psr/log/src/LoggerInterface.php . Ubah manual source codenya karena pakai php 8
+- chmod(): Operation not permitted, belum ketemu, coba tidak pakai SSD eksternal, gunakan drive C.

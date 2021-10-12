@@ -7,3 +7,5 @@
 # !db_data/
 *_data/*
 !*_data/
+
+docker-compose/laravel/.env

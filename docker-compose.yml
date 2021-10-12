@@ -22,7 +22,7 @@ services:
       - ./php/zzphp-log.conf:/usr/local/etc/php-fpm.d/zzphp-log.conf
     # local port 8000 akan diarahkan ke port default port php 8000 pada docker image. ex 8000:8000
     ports: 
-      - "8000:8000"
+      - "9000:9000"
     networks: 
       - doaversdocker
       - app-shared
@@ -36,7 +36,7 @@ services:
     #   context: ./
     #   dockerfile: ./dockerfile/nginx.dockerfile
     ports: 
-      - "8080:80"
+      - "8000:80"
     # path untuk source di dalam docker
     volumes: 
       - ./src-laravel:/var/www
@@ -93,19 +93,22 @@ services:
   #   networks:
   #     - doaversdocker
 
-  # npm:
-  #   image: node:14.17
-  #   container_name: npm
-  #   volumes: 
-  #     - ./src-laravel:/var/www/html
-  #   working_dir: /var/www/html
-  #   entrypoint: ['npm']
-  #   networks:
-  #     - doaversdocker
+  npm:
+    image: node:14.17
+    container_name: npm
+    volumes: 
+      - ./src-laravel:/var/www
+    working_dir: /var/www
+    entrypoint: ['npm']
+    networks:
+      - doaversdocker
 
   # artisan:
-  #   build: 
-  #     context: .
+  #   build:
+  #     args:
+  #       user: doavers
+  #       uid: 1000
+  #     context: ./
   #     dockerfile: ./dockerfile/php_laravel.dockerfile
   #   container_name: artisan
   #   volumes: 
