@@ -18,8 +18,9 @@ F-- README.md
 
 ## Pastikan folder mysql_data kosong, karena akan diisi oleh container
 ```
-rm -fr mysql_data/
-mkdir mysql_data/ 
+rm -fr db_data/
+mkdir db_data/ 
+rm src-laravel/composer.lock
 ```
 
 ## install Laravel
