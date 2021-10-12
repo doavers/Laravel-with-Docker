@@ -2,5 +2,8 @@
 .git 
 .DS_Store
 
-mysql_data/*
-!mysql_data/
+# mysql_data/*
+# !mysql_data/
+# !db_data/
+*_data/*
+!*_data/

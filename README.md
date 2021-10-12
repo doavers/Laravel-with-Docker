@@ -71,6 +71,7 @@ mkdir mysql_data/
  $ docker-compose down
 
  $ docker system prune --volumes
+ $ docker volume prune
  
  $ docker-compose up -d --build
  
@@ -92,3 +93,7 @@ mkdir mysql_data/
 Andrew Smint => [YouTube](https://www.youtube.com/watch?v=I980aPL-NRM&t=3s)
 
 DigitalOcean => [DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-install-and-set-up-laravel-with-docker-compose-on-ubuntu-20-04)
+
+
+## Issues
+- MySQL always restart when using v5.7 or 5.7.35, change MySQL to v5.7.16 solve the problem

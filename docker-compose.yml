@@ -51,9 +51,9 @@ services:
       - app-shared
 
   mysql:
-    image: mysql:5.7
-    container_name: mysql-57
-    user: "1000:50"
+    image: mysql:5.7.16
+    container_name: mysql57
+    # user: "1000:50"
     # tidak merestart mysql kecuali stop
     restart: unless-stopped
     # set tty ke true jika mau berinteraksi dengan image
@@ -64,8 +64,16 @@ services:
       - "3306:3306"
     # taruh di local directory ./mysql sedangkan di docker image di direcroty /var/lib/mysql
     volumes:
-      - ./mysql:/var/lib/mysql
-    command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --innodb-flush-method=fsync"
+      - ./db_data:/var/lib/mysql
+    command: [
+      "mysqld", 
+      "--ignore-db-dir=lost+found", 
+      "--explicit_defaults_for_timestamp",
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci",
+      "--innodb-flush-method=fsync"
+    ]
+    # command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --innodb-flush-method=fsync"
     environment:
       MYSQL_DATABASE: laravel
       MYSQL_USER: laravel
