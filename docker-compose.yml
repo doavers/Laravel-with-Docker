@@ -41,7 +41,7 @@ services:
     volumes: 
       - ./src-laravel:/var/www
       # Tambahkan jika menggunakan public repo docker image
-      - ./nginx:/etc/nginx/conf.d
+      - ./docker-compose/nginx:/etc/nginx/conf.d
     working_dir: /var/www
     depends_on: 
       - phpapp
@@ -64,7 +64,7 @@ services:
       - "3306:3306"
     # taruh di local directory ./mysql sedangkan di docker image di direcroty /var/lib/mysql
     volumes:
-      - ./mysql_data:/var/lib/mysql
+      - ./mysql:/var/lib/mysql
     command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --innodb-flush-method=fsync"
     environment:
       MYSQL_DATABASE: laravel

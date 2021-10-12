@@ -17,8 +17,10 @@ F-- README.md
 ```
 
 ## Pastikan folder mysql_data kosong, karena akan diisi oleh container
+```
 rm -fr mysql_data/
 mkdir mysql_data/ 
+```
 
 ## install Laravel
 ```
@@ -37,7 +39,7 @@ mkdir mysql_data/
 
 ```
  $ docker-compose build phpapp
- $ docker-compose up -d
+ $ docker-compose up -d --force-recreate
 
  $ docker-compose build && docker-compose up -d
 
@@ -76,10 +78,10 @@ mkdir mysql_data/
  $ docker-compose run --rm composer require aschmelyun/larametrics
  $ docker-compose run --rm npm install
  $ docker-compose run --rm npm run dev
- $ docker-compose exec php php -v
- $ docker-compose exec php php /var/www/html/artisan migrate
+ $ docker-compose exec phpapp php -v
+ $ docker-compose exec phpapp php /var/www/html/artisan migrate
  $ docker-compose run --rm artisan migrate
- $ docker-compose exec php chmod 777 -R /var/www/html/storage/
+ $ docker-compose exec phpapp chmod 777 -R /var/www/html/storage/
 
 ```
 
