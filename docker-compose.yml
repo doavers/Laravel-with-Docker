@@ -1,0 +1,122 @@
+version: '3.9'
+
+networks: 
+  doaversdocker:
+  app-shared:
+    driver: bridge
+
+services: 
+  phpapp:
+    image: laravel8:1.0
+    container_name: php-laravel
+    build: 
+      args:
+        user: doavers
+        uid: 1000
+      context: ./
+      dockerfile: ./dockerfile/php_laravel.dockerfile
+    working_dir: /var/www/
+    volumes: 
+      - ./src-laravel:/var/www
+      # Use zz to make php log conf executed at last
+      - ./php/zzphp-log.conf:/usr/local/etc/php-fpm.d/zzphp-log.conf
+    # local port 8000 akan diarahkan ke port default port php 8000 pada docker image. ex 8000:8000
+    ports: 
+      - "8000:8000"
+    networks: 
+      - doaversdocker
+      - app-shared
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    restart: unless-stopped
+    # lokasi source code jika menggunakan custom image
+    # build:
+    #   context: ./
+    #   dockerfile: ./dockerfile/nginx.dockerfile
+    ports: 
+      - "8080:80"
+    # path untuk source di dalam docker
+    volumes: 
+      - ./src-laravel:/var/www
+      # Tambahkan jika menggunakan public repo docker image
+      - ./nginx:/etc/nginx/conf.d
+    working_dir: /var/www
+    depends_on: 
+      - phpapp
+      - mysql
+    networks: 
+      - doaversdocker
+      - app-shared
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql-57
+    user: "1000:50"
+    # tidak merestart mysql kecuali stop
+    restart: unless-stopped
+    # set tty ke true jika mau berinteraksi dengan image
+    tty: true
+    # Jika di local laptop takut port 3306 sudah dipakai, maka local port bisa diubah jadi 4306
+    # local port 4306 akan diarahkan ke port default port mysql 3306 pada docker image. ex 4306:3306
+    ports:
+      - "3306:3306"
+    # taruh di local directory ./mysql sedangkan di docker image di direcroty /var/lib/mysql
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --innodb-flush-method=fsync"
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: larasecret
+      MYSQL_ROOT_PASSWORD: Password
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    networks:
+      - doaversdocker
+
+  # composer:
+  #   image: composer:latest
+  #   container_name: composer
+  #   volumes: 
+  #     - ./src-laravel:/var/www/html
+  #   working_dir: /var/www/html
+  #   networks:
+  #     - doaversdocker
+
+  # npm:
+  #   image: node:14.17
+  #   container_name: npm
+  #   volumes: 
+  #     - ./src-laravel:/var/www/html
+  #   working_dir: /var/www/html
+  #   entrypoint: ['npm']
+  #   networks:
+  #     - doaversdocker
+
+  # artisan:
+  #   build: 
+  #     context: .
+  #     dockerfile: ./dockerfile/php_laravel.dockerfile
+  #   container_name: artisan
+  #   volumes: 
+  #     - ./src-laravel:/var/www
+  #   depends_on: 
+  #     - mysql
+  #   working_dir: /var/www
+  #   entrypoint: ['php','/var/www/artisan']
+  #   networks:
+  #     - doaversdocker
+
+  # memcached:
+  #   image: memcached:1.6-alpine
+  #   ports:
+  #     - "11211:11211"
+  #   restart: always
+
+  # redis:
+  #   image: redis:5.0-alpine
+  #   ports:
+  #     - "6379:6379"
+  #   restart: always
